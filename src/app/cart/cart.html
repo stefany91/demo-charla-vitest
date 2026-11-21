@@ -1,0 +1,99 @@
+<div class="container">
+  
+  <header class="header">
+    <div class="title-row">
+      <span class="cart-icon">🛒</span>
+      <h1>Mi Carrito</h1>
+    </div>
+    <span class="badge-count">{{ totalItems() }} productos</span>
+  </header>
+
+  <main class="main-grid">
+    
+    <section class="card">
+      <h2>Agregar productos:</h2>
+      <div class="product-list">
+        @for (product of catalog; track product.id) {
+          <button
+            [id]="product.id === 1 ? 'add-btn' : 'add-btn-' + product.id"
+            class="product-item"
+            (click)="addProduct(product)">
+            <span class="product-name">{{ product.name }}</span>
+            <span class="price-tag">Bs. {{ product.price }}</span>
+          </button>
+        }
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Resumen del carrito</h2>
+
+      <div class="summary-actions">
+        <button
+          id="coupon-btn"
+          class="btn-coupon"
+          (click)="applyCoupon('ANGULAR20')"
+          [disabled]="items().length === 0">
+          🎟️ Cupón ANGULAR20 (20%)
+        </button>
+
+        <button
+          id="clear-btn"
+          class="btn-clear"
+          (click)="clearCart()"
+          [disabled]="items().length === 0">
+          🗑️ Vaciar
+        </button>
+      </div>
+
+
+      @if (errorMessage()) {
+        <p id="error" class="error-message">{{ errorMessage() }}</p>
+      }
+
+      @if (items().length === 0) {
+        <div class="empty-message">
+          Tu carrito está vacío. Selecciona un producto a la izquierda.
+        </div>
+      } @else {
+        <div class="cart-table-header">
+          <span>Producto</span>
+          <span class="col-center">Cant.</span>
+          <span class="col-right">Subtotal</span>
+        </div>
+
+        <ul class="cart-items">
+          @for (item of items(); track item.id) {
+            <li class="cart-item">
+              <span class="item-name">{{ item.name }}</span>
+              <span class="qty-badge">{{ item.quantity }}</span>
+              <span class="item-price">Bs. {{ item.price * item.quantity }}</span>
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="summary-totals">
+        <div id="subtotal" class="total-row">
+          <span>Subtotal:</span>
+          <strong>Bs. {{ subtotal() }}</strong>
+        </div>
+
+        @if (discountRate() > 0 && items().length > 0) {
+          <div class="total-row discount-row">
+            <span>Descuento aplicado:</span>
+            <span class="discount-badge">-{{ discountRate() * 100 }}%</span>
+          </div>
+        }
+
+        <hr class="divider" />
+
+        <div id="total" class="total-row final-total">
+          <span>Total a pagar:</span>
+          <strong>Bs. {{ total() }}</strong>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
